@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Cute park colour palette</title>
+<style>
+body{font-family:Arial,sans-serif;background:#FFFDF8;color:#3B2F4F;max-width:720px;margin:24px auto;padding:0 16px}
+h1{font-size:22px;margin:0 0 4px} p{margin:0 0 12px;color:#6B5B8C}
+h2{font-size:14px;font-weight:normal;color:#6B5B8C;margin:20px 0 8px}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.sw{width:160px;height:96px;border:1px solid #0001;border-radius:12px;padding:10px;text-align:left;cursor:pointer;color:#3B2F4F;display:flex;flex-direction:column;justify-content:flex-end;font:inherit}
+.sw.dark{color:#FFF1D6} .sw b{font-size:14px} .sw span{font-family:Consolas,monospace;font-size:14px;margin-top:2px} .sw i{font-size:11px;font-style:normal;opacity:.7;margin-top:2px}
+</style></head><body>
+<h1>Cute park colour palette</h1>
+<p>Click a colour to copy its code, ready to paste into three.js.</p>
+<h2>Sky</h2><div class="row"><button class="sw" style="background:#CDE8F6" data-code="0xCDE8F6"><b>Sky mist</b><span>0xCDE8F6</span><i>click to copy</i></button><button class="sw" style="background:#FFE3D0" data-code="0xFFE3D0"><b>Peach cloud</b><span>0xFFE3D0</span><i>click to copy</i></button></div><h2>Ground</h2><div class="row"><button class="sw" style="background:#A9DDA0" data-code="0xA9DDA0"><b>Meadow</b><span>0xA9DDA0</span><i>click to copy</i></button><button class="sw" style="background:#D4E8A0" data-code="0xD4E8A0"><b>Sunny hill</b><span>0xD4E8A0</span><i>click to copy</i></button><button class="sw" style="background:#6FB583" data-code="0x6FB583"><b>Moss</b><span>0x6FB583</span><i>click to copy</i></button><button class="sw" style="background:#F3DFB8" data-code="0xF3DFB8"><b>Sandy path</b><span>0xF3DFB8</span><i>click to copy</i></button></div><h2>Trees and flowers</h2><div class="row"><button class="sw" style="background:#7CCDAA" data-code="0x7CCDAA"><b>Mint leaf</b><span>0x7CCDAA</span><i>click to copy</i></button><button class="sw" style="background:#F7B6C8" data-code="0xF7B6C8"><b>Blossom</b><span>0xF7B6C8</span><i>click to copy</i></button><button class="sw" style="background:#FFD97A" data-code="0xFFD97A"><b>Butter</b><span>0xFFD97A</span><i>click to copy</i></button><button class="sw" style="background:#B58B6E" data-code="0xB58B6E"><b>Bark</b><span>0xB58B6E</span><i>click to copy</i></button></div><h2>Water and buildings</h2><div class="row"><button class="sw" style="background:#8FD3E8" data-code="0x8FD3E8"><b>Pond</b><span>0x8FD3E8</span><i>click to copy</i></button><button class="sw" style="background:#FFF1D6" data-code="0xFFF1D6"><b>Cream walls</b><span>0xFFF1D6</span><i>click to copy</i></button><button class="sw" style="background:#EE8B86" data-code="0xEE8B86"><b>Coral roof</b><span>0xEE8B86</span><i>click to copy</i></button></div><h2>Accents</h2><div class="row"><button class="sw" style="background:#C7B3EC" data-code="0xC7B3EC"><b>Lavender</b><span>0xC7B3EC</span><i>click to copy</i></button><button class="sw dark" style="background:#6B5B8C" data-code="0x6B5B8C"><b>Plum shadow</b><span>0x6B5B8C</span><i>click to copy</i></button></div>
+<script>
+document.querySelectorAll('.sw').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.querySelector('i');
+  const done=()=>{t.textContent='copied!';setTimeout(()=>t.textContent='click to copy',1200)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(b.dataset.code).then(done,()=>{t.textContent=b.dataset.code});
+  else{const a=document.createElement('textarea');a.value=b.dataset.code;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();done()}
+}));
+</script></body></html>
