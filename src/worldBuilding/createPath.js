@@ -1,12 +1,13 @@
 import * as THREE from "three";
+import {getTerrainHeight} from "./Terrain.js";
 
 
-export function createPath(pathCoordinates, color, height) {
+export function createPath(pathCoordinates, color, mesh) {
     const pathCurve = new THREE.CatmullRomCurve3(pathCoordinates);
     const pathPoints = pathCurve.getPoints(100);
 
     for (const p of pathPoints){
-        p.y = height(p.x,p.z) + 0.2;
+        p.y = getTerrainHeight(p.x,p.z,mesh) + 0.2;
 
     }
 
@@ -28,4 +29,4 @@ export function createPath(pathCoordinates, color, height) {
 // return... combines shape into a Line object and draws segments through points.
 
 //+0.2 so it doesnt flicker and melt into terrain/grass
-//height is the getTerrainHeight function
+//height/ y becomes is the getTerrainHeight function
