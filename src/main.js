@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import {MEADOW, PLUM_SHADOW, SKY_MIST} from "./assets/palette_constants.js";
-import skyUrl from "./assets/sky_dev.jpg";
 import {ImprovedNoise, OrbitControls} from "three/addons";
 import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
@@ -37,20 +36,38 @@ controls.update();
 const terrain = new THREE.PlaneGeometry(TERRAIN_WIDTH,TERRAIN_DEPTH,128,128);
 const angle = 90*Math.PI/180;
 const terrainMaterial = new THREE.MeshStandardMaterial(
-    {color: MEADOW, side: THREE.DoubleSide, wireframe: true},);
+    {color: MEADOW, side: THREE.DoubleSide, wireframe: false},);
 const terrainMesh = new THREE.Mesh(terrain, terrainMaterial);
 
 terrain.rotateX(angle)
 const pos =terrain.attributes.position;
 const noise = new ImprovedNoise();
 for(let i = 0; i<pos.count; i++) {
-    const distancefromO = Math.hypot(pos.getX(i), pos.getZ(i));
+    const hypotenuse = Math.hypot(pos.getX(i), pos.getZ(i));
     pos.setY(i,
-        //(Math.max(0,(Math.sin(pos.getX(i)*0.2) * Math.cos(pos.getZ(i)*0.2))))*distancefromO/50);
-        ((Math.max(0,noise.noise(pos.getX(i)*0.05,0,pos.getZ(i)*0.05))*2)*distancefromO/50));
+        //(Math.max(0,(Math.sin(pos.getX(i)*0.2) * Math.cos(pos.getZ(i)*0.2))))*hypotenuse/50);
+        ((Math.max(0,noise.noise(pos.getX(i)*0.05,0,pos.getZ(i)*0.05))*2)*hypotenuse/50));
 }
-terrain.computeVertexNormals()
+const raycaster = new THREE.Raycaster();
+function getTerrainHeight(x,z){
+    const rayOrigin = new THREE.Vector3(x,100,z)
+    const rayDirection = new THREE.Vector3( 0, -1, 0)
+    raycaster.set(rayOrigin, rayDirection);
+    const list = raycaster.intersectObject(terrainMesh);
+    if(list.length>0){
+        console.log(list[0].point.y)
+        return list[0].point.y;
+    } else {
+        return 0
+    }
+}
+
+
+terrain.computeVertexNormals();
+terrain.computeBoundingSphere();
 scene.add(terrainMesh);
+
+
 
 
 //paths
@@ -59,7 +76,7 @@ for(const p of pathCoordinates){
     for(const point of p){
         point.x = -point.x;
     }
-    const path = createPath(p, PLUM_SHADOW);
+    const path = createPath(p, PLUM_SHADOW, getTerrainHeight);
     scene.add(path);
 }
 
@@ -68,7 +85,7 @@ for(const p of pathCoordinates){
 
 //animation loop
 
-function animate(time) {
+function animate() {
 
     renderer.render(scene, camera);
     controls.update();
