@@ -1,10 +1,11 @@
 import * as THREE from 'three';
-import {MEADOW, PLUM_SHADOW, SKY_MIST} from "./assets/palette_constants.js";
-import {ImprovedNoise, OrbitControls} from "three/addons";
+import {MEADOW, PLUM_SHADOW, SANDY_PATH, SKY_MIST} from "./assets/palette_constants.js";
+import { OrbitControls} from "three/addons";
 import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
-import {getTerrainHeight, Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
+import {Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
+import {Stones} from "./worldBuilding/Stones.js";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -49,8 +50,10 @@ scene.add(terrain);
 for(const p of pathCoordinates){
     for(const point of p){
         point.x = -point.x;
+
     }
-    const path = createPath(p, PLUM_SHADOW, terrain);
+//delete later
+    const path = createPath(p, SANDY_PATH, terrain);
     scene.add(path);
 }
 
@@ -66,6 +69,3 @@ function animate() {
 
 }
 renderer.setAnimationLoop(animate);
-
-// change the rotation of terrain so the coordinates are x and y and not x and z
-// del opp i forkjellige filer og classer

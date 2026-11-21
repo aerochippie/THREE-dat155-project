@@ -5,11 +5,20 @@ import {getTerrainHeight} from "./Terrain.js";
 export function createPath(pathCoordinates, color, mesh) {
     const pathCurve = new THREE.CatmullRomCurve3(pathCoordinates);
     const pathPoints = pathCurve.getPoints(100);
+    const leftSideList = new Float32Array(pathPoints.length);
+    const rightSideList = new Float32Array(pathPoints.length);
 
-    for (const p of pathPoints){
-        p.y = getTerrainHeight(p.x,p.z,mesh) + 0.2;
+    for (let i = 0; i<pathPoints.length; i++){
+        pathPoints[i].y = getTerrainHeight(pathPoints[i].x,pathPoints[i].z,mesh) + 0.2;
+
+        const thisPoint = pathPoints[i];
+        const nextPoint = pathPoints[i+1];
+        const distanceToNextPoint = Math.hypot((nextPoint.x - thisPoint.x), (nextPoint.z - thisPoint.z));
+        const leftSidex = (nextPoint.x - thisPoint.x);
+        const rightSidex = - nextPoint.z - thisPoint.z;
 
     }
+
 
     const pathGeometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
     const pathMaterial = new THREE.LineBasicMaterial({color: color})
