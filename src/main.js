@@ -5,7 +5,6 @@ import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
 import {Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
-import {Stones} from "./worldBuilding/Stones.js";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
