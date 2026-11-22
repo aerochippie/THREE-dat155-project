@@ -261,8 +261,8 @@ function walkVr(time){
              return;
          }
 
-        // renderer.xr.getCamera().getWorldDirection(lookingAtDirection);
-         camera.getWorldDirection(lookingAtDirection);
+         renderer.xr.getCamera().getWorldDirection(lookingAtDirection);
+       //  camera.getWorldDirection(lookingAtDirection);
          lookingAtDirection.y = 0;
          lookingAtDirection.normalize();
 
