@@ -8,7 +8,7 @@ import {
     SANDY_PATH,
     SKY_MIST, SUNSET_ORANGE, SUNSET_PINK, TANGERINE
 } from "./assets/palette_constants.js";
-import {EXRLoader, OrbitControls, VRButton} from "three/addons";
+import {EXRLoader, OrbitControls, VRButton, XRControllerModelFactory} from "three/addons";
 import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
@@ -104,6 +104,15 @@ const player = new THREE.Group()
 player.add(camera);
 player.position.set(0, getTerrainHeight(0,0,terrain), 0);
 
+ const controllerFactory = new XRControllerModelFactory();
+ for(let i = 0; i<2;i++){
+     const controller = renderer.xr.getController(i)
+     const grip = renderer.xr.getControllerGrip(i);
+     grip.add(controllerFactory.createControllerModel(grip))
+     player.add(controller);
+     player.add(grip);
+
+ }
 
 //animation loop
 
