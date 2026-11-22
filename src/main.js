@@ -80,7 +80,7 @@ for(const p of pathCoordinates){
 
 //fog
 //scene.fog = new THREE.FogExp2(SKY_MIST, 0.009)
-scene.fog = new THREE.Fog(0xFFE3D0, 1 ,260)
+scene.fog = new THREE.Fog(0xFFE3D0, 40 ,260)
 
 
 // sun
@@ -101,6 +101,7 @@ document.body.appendChild(vrButton);
 //player setp for vr
 
 const player = new THREE.Group()
+scene.add(player);
 player.add(camera);
 player.position.set(0, getTerrainHeight(0,0,terrain), 0);
 
@@ -113,13 +114,49 @@ player.position.set(0, getTerrainHeight(0,0,terrain), 0);
      player.add(grip);
 
  }
+//walking vr
+const timer = new THREE.Timer();
+ const walkingspeed = 2;
+ const lookingAtDirection = new THREE.Vector3();
+function walkVr(time){
+
+     const session = renderer.xr.getSession();
+     if(!session){
+         return;
+     }
+
+     for (const s of session.inputSources) {
+         if (!s.gamepad || s.handedness !== "left") {
+             continue;
+         }
+
+         const sideways = s.gamepad.axes[2];
+         const ahead = -s.gamepad.axes[3];
+         if (Math.abs(sideways) < 0.1 && Math.abs(ahead) < 0.1) {
+             return;
+         }
+
+         renderer.xr.getCamera().getWorldDirection(lookingAtDirection);
+         lookingAtDirection.y = 0;
+         lookingAtDirection.normalize();
+
+         const rightX = -lookingAtDirection.z;
+         const rightZ = lookingAtDirection.x;
+         player.position.x += (lookingAtDirection.x * ahead + rightX * sideways) * walkingspeed * time;
+         player.position.z += (lookingAtDirection.z * ahead + rightZ * sideways) * walkingspeed * time;
+         player.position.y = getTerrainHeight(player.position.x, player.position.z, terrain);
+     }
+}
 
 //animation loop
 
-function animate() {
+function animate(timestamp) {
 
+    timer.update(timestamp);
+    walkVr(timer.getDelta());
     renderer.render(scene, camera);
     controls.update();
+
 
 }
 renderer.setAnimationLoop(animate);
