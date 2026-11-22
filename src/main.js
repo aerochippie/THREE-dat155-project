@@ -1,10 +1,19 @@
 import * as THREE from 'three';
-import {MEADOW, PLUM_SHADOW, SANDY_PATH, SKY_MIST} from "./assets/palette_constants.js";
-import { OrbitControls} from "three/addons";
+import {
+    BUTTER,
+    CORAL_ROOF,
+    MEADOW,
+    PEACH_CLOUD,
+    PLUM_SHADOW,
+    SANDY_PATH,
+    SKY_MIST
+} from "./assets/palette_constants.js";
+import {EXRLoader, OrbitControls} from "three/addons";
 import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
 import {Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
+import {TextureLoader} from "three";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -14,19 +23,23 @@ const camera = new THREE.PerspectiveCamera(
 // scene.add(helper);
 
 //light
-const directionalLight = new THREE.DirectionalLight(0xFFE3D0);
-directionalLight.position.set(0, 10, 90);
-const hemiLight = new THREE.HemisphereLight(SKY_MIST, MEADOW, 2);
+const directionalLight = new THREE.DirectionalLight(BUTTER);
+directionalLight.position.set(0, 10, 150);
+const hemiLight = new THREE.HemisphereLight(0xF7B6C8, CORAL_ROOF, 3);
 scene.add(directionalLight);
 scene.add(hemiLight);
 
 //renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(SKY_MIST)
+renderer.setClearColor(PEACH_CLOUD)
 document.body.appendChild(renderer.domElement);
-
-
+//sky texture
+new TextureLoader().load("/sky2.jpg", (skyTexture) =>{
+skyTexture.mapping = THREE.EquirectangularReflectionMapping;
+skyTexture.colorSpace = THREE.SRGBColorSpace;
+scene.background = skyTexture
+scene.backgroundBlurriness= 0.1});
 //controls for testing PC
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.set(0,100,-1);
@@ -49,14 +62,23 @@ scene.add(terrain);
 for(const p of pathCoordinates){
     for(const point of p){
         point.x = -point.x;
-
     }
-//delete later
     const path = createPath(p, SANDY_PATH, terrain);
     scene.add(path);
 }
 
+//fog
+//scene.fog = new THREE.FogExp2(SKY_MIST, 0.009)
+scene.fog = new THREE.Fog(0xFFE3D0, 1 ,260)
 
+
+// sun
+const sunGeometry = new THREE.SphereGeometry(70, 32, 32)
+const sunMaterial = new THREE.MeshBasicMaterial({color: BUTTER, side: THREE.DoubleSide, fog: false});
+const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+sun.position.z = 330;
+sun.position.y= -30
+scene.add(sun);
 
 
 //animation loop

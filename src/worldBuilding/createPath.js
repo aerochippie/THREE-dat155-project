@@ -26,8 +26,8 @@ export function createPath(pathCoordinates, color, mesh) {
         const leftX = thisPoint.x - sideDirectionX * widthFromCenter;
         const leftZ = thisPoint.z - sideDirectionZ * widthFromCenter;
 
-        const leftPathPoint = new THREE.Vector3(leftX, getTerrainHeight(leftX,leftZ, mesh) + 0.1, leftZ);
-        const rightPathPoint = new THREE.Vector3(rightX, getTerrainHeight(rightX, rightZ, mesh) +0.1, rightZ)
+        const leftPathPoint = new THREE.Vector3(leftX, getTerrainHeight(leftX,leftZ, mesh) + 0.2, leftZ);
+        const rightPathPoint = new THREE.Vector3(rightX, getTerrainHeight(rightX, rightZ, mesh) +0.2, rightZ)
 
         leftSideList.push(leftPathPoint);
         rightSideList.push(rightPathPoint);
