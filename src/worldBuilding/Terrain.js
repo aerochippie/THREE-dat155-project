@@ -21,7 +21,7 @@ export function terrainAddHills(positions){
         const hypotenuse = Math.hypot(positions.getX(i), positions.getZ(i));
         positions.setY(i,
             //(Math.max(0,(Math.sin(pos.getX(i)*0.2) * Math.cos(pos.getZ(i)*0.2))))*hypotenuse/50);
-            ((Math.max(0,noise.noise(positions.getX(i)*0.06,0,positions.getZ(i)*0.06))*3.4)*(hypotenuse/55) ** 1.5));
+            ((Math.max(0,noise.noise(positions.getX(i)*0.06,0,positions.getZ(i)*0.06))*6)*(0.1 +(hypotenuse/60) ** 3)));
     }
 }
 const raycaster = new THREE.Raycaster();
@@ -72,5 +72,45 @@ export function getTerrainHeight(x,z, mesh){
 
 /// add notes fo rmyself with explantations
 
+export function sandMix (terrain, grassTexture, sandTexture, pondX, pondZ, radius){
+    const loader = new THREE.TextureLoader();
+    const grass = loader.load(grassTexture);
+    const sand =loader.load(sandTexture);
 
+    for (const texture of [sand, grass]) {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.colorSpace = THREE.SRGBColorSpace;
+    }
+    // whole park
+    grass.repeat.set(40,40);
+
+
+    terrain.material.map = grass;
+    terrain.material.color.set(0xffffff);
+    terrain.material.onBeforeCompile = (shader) => {
+        shader.uniforms.uSandMap = {value: sand};
+        shader.uniforms.uPondCenter = {value: new THREE.Vector2(pondX, pondZ)};
+        shader.uniforms.uSandRadius = {value: radius};
+        //pass positions
+        shader.vertexShader = shader.vertexShader.replace(
+            "#include <common>",
+            "#include <common>\nvarying vec3 vTerrainPos;")
+            .replace("#include <begin_vertex>", "#include <begin_vertex>\nvTerrainPos = position;")
+            shader.fragmentShader = shader.fragmentShader.replace("#include <common>",
+                `#include <common>
+                 uniform sampler2D uSandMap;
+                 uniform vec2 uPondCenter;
+                 uniform float uSandRadius;
+                 varying vec3 vTerrainPos;`)
+            .replace("#include <map_fragment>",
+                `vec4 grassColor = texture2D(map, vMapUv);
+                 vec4 sandColor = texture2D(uSandMap, vMapUv);
+                 float distanceToPond = distance(vTerrainPos.xz, uPondCenter);
+                 float sandAmount = 1.0 - smoothstep(uSandRadius * 0.6, uSandRadius, distanceToPond);
+                 diffuseColor *= mix(grassColor, sandColor, sandAmount);`);
+    };
+    terrain.material.needsUpdate = true;
+
+}
 

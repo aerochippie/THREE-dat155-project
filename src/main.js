@@ -13,7 +13,7 @@ import {EXRLoader, OrbitControls, VRButton, XRControllerModelFactory} from "thre
 import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
-import {getTerrainHeight, Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
+import {getTerrainHeight, sandMix, Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
 import {TextureLoader} from "three";
 import {GLTFLoader} from "three/addons";
 import {isNearPath} from "./worldBuilding/isNearPath.js";
@@ -45,7 +45,8 @@ scene.add(directionalLight);
 scene.add(hemiLight);
 
 //renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({antialias: true});
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(APRICOT)
 renderer.shadowMap.enabled = true;
@@ -62,11 +63,11 @@ document.body.appendChild(renderer.domElement);
 
 
 //sky texture
-new TextureLoader().load("/sky2.jpg", (skyTexture) =>{
+new TextureLoader().load("textures/sky_equirect.jpg", (skyTexture) =>{
 skyTexture.mapping = THREE.EquirectangularReflectionMapping;
 skyTexture.colorSpace = THREE.SRGBColorSpace;
 scene.background = skyTexture
-scene.backgroundBlurriness= 0.01});
+});
 //controls for testing PC
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.set(0,100,-1);
@@ -88,6 +89,7 @@ terrainGeometry.computeBoundingSphere();
 terrain.receiveShadow = true;
 scene.add(terrain);
 
+
 //pond
 
 const pondPosX = -20;
@@ -96,7 +98,7 @@ const pondRadius = 15;
 const pond = new Pond(pondRadius);
 pond.position.set(-20, 0,0)
 scene.add(pond);
-
+sandMix(terrain,"/textures/grass.jpg", "textures/sand.jpg",pondPosX,pondPosZ, 15);
 
 
 //paths

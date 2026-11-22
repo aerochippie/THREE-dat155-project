@@ -3,6 +3,7 @@ import {GLTFLoader} from "three/addons";
 import {TERRAIN_WIDTH} from "../assets/constants.js";
 import {isNearPath} from "./isNearPath.js";
 import {getTerrainHeight} from "./Terrain.js";
+import {isTooHigh} from "./isTooHigh.js";
 
 const loader = new GLTFLoader();
 
@@ -35,7 +36,7 @@ export class InstanceModel extends THREE.Group {
         for ( let i = 0 ; i<count; i++) {
             let x =random(TERRAIN_WIDTH);
             let z =random(TERRAIN_WIDTH);
-            while (isNearPath(x,z,pathPositions,minDist)) {
+            while (isNearPath(x,z,pathPositions,minDist) || isTooHigh(x,z,terrain, 2)) {
                 x =random(TERRAIN_WIDTH);
                 z =random(TERRAIN_WIDTH);
             }
