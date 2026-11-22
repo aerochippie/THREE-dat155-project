@@ -10,8 +10,11 @@ export function createPath(pathCoordinates, color, mesh) {
     const rightSideList = [];
     const widthFromCenter = 2
 
-    for (let i = 0; i< pathPoints.length -1; i++){ // why do i want it to stop early
+    for (let i = 0; i< pathPoints.length -1; i++)
+
+    { // stop early
         pathPoints[i].y = getTerrainHeight(pathPoints[i].x,pathPoints[i].z,mesh) + 0.2;
+
 
         const thisPoint = pathPoints[i];
         const nextPoint = pathPoints[i+1];
@@ -21,10 +24,13 @@ export function createPath(pathCoordinates, color, mesh) {
         const sideDirectionZ = (nextPoint.x - thisPoint.x) / distanceToNextPoint  // divide to get the length of one
 
 
+
         const rightX = thisPoint.x + sideDirectionX * widthFromCenter;  // review out the sides and logic later to explain
         const rightZ = thisPoint.z + sideDirectionZ * widthFromCenter;
         const leftX = thisPoint.x - sideDirectionX * widthFromCenter;
         const leftZ = thisPoint.z - sideDirectionZ * widthFromCenter;
+
+
 
         const leftPathPoint = new THREE.Vector3(leftX, getTerrainHeight(leftX,leftZ, mesh) + 0.13, leftZ);
         const rightPathPoint = new THREE.Vector3(rightX, getTerrainHeight(rightX, rightZ, mesh) +0.13, rightZ)

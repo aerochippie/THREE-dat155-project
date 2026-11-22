@@ -38,11 +38,9 @@ export function getTerrainHeight(x,z, mesh){
     // }
     const { width, height, widthSegments, heightSegments } = mesh.geometry.parameters;
     const positions = mesh.geometry.attributes.position;
-
     const cellWidth = width / widthSegments;
     const cellDepth = height / heightSegments;
 
-    // where (x, z) is on the grid, counted in cells from the top-left corner
     const gridX = (x + width / 2) / cellWidth;
     const gridZ = (height / 2 - z) / cellDepth;
 
@@ -51,20 +49,24 @@ export function getTerrainHeight(x,z, mesh){
         return 0;
     }
 
-    // which cell we are in, and how far into it (0 to 1)
+
+
+
+
     const column = Math.min(Math.floor(gridX), widthSegments - 1);
     const row = Math.min(Math.floor(gridZ), heightSegments - 1);
     const fractionX = gridX - column;
     const fractionZ = gridZ - row;
 
-    // heights at the four corners of the cell
+
+
     const rowLength = widthSegments + 1;
     const topLeft = positions.getY(row * rowLength + column);
     const topRight = positions.getY(row * rowLength + column + 1);
     const bottomLeft = positions.getY((row + 1) * rowLength + column);
     const bottomRight = positions.getY((row + 1) * rowLength + column + 1);
 
-    // blend: first along x on the top and bottom edges, then between them along z
+
     const topEdge = topLeft + (topRight - topLeft) * fractionX;
     const bottomEdge = bottomLeft + (bottomRight - bottomLeft) * fractionX;
     return topEdge + (bottomEdge - topEdge) * fractionZ;

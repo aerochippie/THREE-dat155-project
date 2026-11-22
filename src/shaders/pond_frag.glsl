@@ -1,3 +1,5 @@
+
+
 varying vec3 vWorldPos;
 uniform vec3 uColor;
 varying float vCircle;

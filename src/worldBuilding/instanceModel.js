@@ -36,7 +36,7 @@ export class InstanceModel extends THREE.Group {
         for ( let i = 0 ; i<count; i++) {
             let x =random(TERRAIN_WIDTH);
             let z =random(TERRAIN_WIDTH);
-            while (isNearPath(x,z,pathPositions,minDist) || isTooHigh(x,z,terrain, 2)) {
+            while (isNearPath(x,z,pathPositions,minDist) || isTooHigh(x,z,terrain, 2) && isNearPath(x,z,pathPositions,minDist)) {
                 x =random(TERRAIN_WIDTH);
                 z =random(TERRAIN_WIDTH);
             }

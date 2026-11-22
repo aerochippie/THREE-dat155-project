@@ -204,21 +204,6 @@ scene.add(new InstanceModel("Bush_Common_Flowers.gltf", 200, terrain, isNearPath
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // set vr
 renderer.xr.enabled = true;
 const vrButton =  VRButton.createButton(renderer);
