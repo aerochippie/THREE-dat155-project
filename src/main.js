@@ -147,6 +147,26 @@ function walkVr(time){
          player.position.y = getTerrainHeight(player.position.x, player.position.z, terrain);
      }
 }
+const turnspeed= THREE.MathUtils.degToRad(60)
+function turnAround(time){
+    const session = renderer.xr.getSession();
+    if(!session){
+        return
+    }
+    for (const s of session.inputSources) {
+        if (!s.gamepad || s.handedness !== "right") {
+            continue;
+        }
+        const turnButton = s.gamepad.axes[2];
+        if(Math.abs(turnButton)<0.1){
+            return
+        }
+
+        player.rotation.y -= turnButton * turnspeed * time;
+
+
+    }
+}
 
 //animation loop
 
@@ -154,6 +174,7 @@ function animate(timestamp) {
 
     timer.update(timestamp);
     walkVr(timer.getDelta());
+    turnAround(timer.getDelta());
     renderer.render(scene, camera);
     controls.update();
 
