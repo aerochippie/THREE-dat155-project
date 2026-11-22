@@ -14,6 +14,7 @@ import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
 import {getTerrainHeight, Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
 import {TextureLoader} from "three";
+import {GLTFLoader} from "three/addons";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -91,6 +92,49 @@ sun.position.z = 330;
 sun.position.y= -30
 scene.add(sun);
 
+//  MODELS ---------------------
+const loader = new GLTFLoader();
+loader.load("/models/TwistedTree_4.gltf", (gltf) => {
+
+    gltf.scene.position.set(10, getTerrainHeight(10,10,terrain), 10)
+    //scaling : gltf.scene.scale.set()
+    scene.add(gltf.scene);
+
+})
+loader.load("/models/TwistedTree_5.gltf", (gltf) => {
+
+    gltf.scene.position.set(15, getTerrainHeight(10,10,terrain), 20)
+    //scaling : gltf.scene.scale.set()
+    scene.add(gltf.scene);
+
+})
+loader.load("/models/TwistedTree_3.gltf", (gltf) => {
+
+    gltf.scene.position.set(10, getTerrainHeight(20,10,terrain), 15)
+    //scaling : gltf.scene.scale.set()
+    scene.add(gltf.scene);
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // set vr
 renderer.xr.enabled = true;
@@ -136,7 +180,8 @@ function walkVr(time){
              return;
          }
 
-         renderer.xr.getCamera().getWorldDirection(lookingAtDirection);
+        // renderer.xr.getCamera().getWorldDirection(lookingAtDirection);
+         camera.getWorldDirection(lookingAtDirection);
          lookingAtDirection.y = 0;
          lookingAtDirection.normalize();
 
