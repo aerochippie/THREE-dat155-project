@@ -1,18 +1,18 @@
 import * as THREE from 'three';
 import {
     BUTTER,
-    CORAL_ROOF,
+    CORAL_ROOF, HONEY, HORIZON_GLOW,
     MEADOW,
     PEACH_CLOUD,
     PLUM_SHADOW,
     SANDY_PATH,
-    SKY_MIST
+    SKY_MIST, SUNSET_ORANGE, SUNSET_PINK, TANGERINE
 } from "./assets/palette_constants.js";
-import {EXRLoader, OrbitControls} from "three/addons";
+import {EXRLoader, OrbitControls, VRButton} from "three/addons";
 import {TERRAIN_DEPTH, TERRAIN_WIDTH} from "./assets/constants.js";
 import {createPath} from "./worldBuilding/createPath.js";
 import {pathCoordinates} from "./worldBuildingConstants/pathConstants.js";
-import {Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
+import {getTerrainHeight, Terrain, terrainAddHills} from "./worldBuilding/Terrain.js";
 import {TextureLoader} from "three";
 
 const scene = new THREE.Scene();
@@ -23,9 +23,9 @@ const camera = new THREE.PerspectiveCamera(
 // scene.add(helper);
 
 //light
-const directionalLight = new THREE.DirectionalLight(BUTTER);
+const directionalLight = new THREE.DirectionalLight(TANGERINE);
 directionalLight.position.set(0, 10, 150);
-const hemiLight = new THREE.HemisphereLight(0xF7B6C8, CORAL_ROOF, 3);
+const hemiLight = new THREE.HemisphereLight(HORIZON_GLOW, SUNSET_ORANGE, 3);
 scene.add(directionalLight);
 scene.add(hemiLight);
 
@@ -34,6 +34,17 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(PEACH_CLOUD)
 document.body.appendChild(renderer.domElement);
+
+
+
+
+
+
+
+
+
+
+
 //sky texture
 new TextureLoader().load("/sky2.jpg", (skyTexture) =>{
 skyTexture.mapping = THREE.EquirectangularReflectionMapping;
@@ -74,11 +85,24 @@ scene.fog = new THREE.Fog(0xFFE3D0, 1 ,260)
 
 // sun
 const sunGeometry = new THREE.SphereGeometry(70, 32, 32)
-const sunMaterial = new THREE.MeshBasicMaterial({color: BUTTER, side: THREE.DoubleSide, fog: false});
+const sunMaterial = new THREE.MeshBasicMaterial({color: TANGERINE, side: THREE.DoubleSide, fog: false});
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 sun.position.z = 330;
 sun.position.y= -30
 scene.add(sun);
+
+
+// set vr
+renderer.xr.enabled = true;
+const vrButton =  VRButton.createButton(renderer);
+document.body.appendChild(vrButton);
+
+
+//player setp for vr
+
+const player = new THREE.Group()
+player.add(camera);
+player.position.set(0, getTerrainHeight(0,0,terrain), 0);
 
 
 //animation loop
